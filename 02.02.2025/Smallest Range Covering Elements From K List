@@ -1,0 +1,56 @@
+int compare(const void* a, const void* b) {
+    return (**(int**)a - **(int**)b);
+}
+
+int* smallestRange(int** nums, int numsSize, int* numsColSize, int* returnSize) {
+    
+    int len = 0;
+    for(int i = 0; i < numsSize; i++) {
+        len += *(numsColSize + i);
+    }
+
+
+    int idx = 0;
+    int** merged = malloc(sizeof(int *) * len);
+    for(int i = 0; i < numsSize; i++) {
+        for(int j = 0; j < *(numsColSize + i); j++) {
+            *(merged + idx) = malloc(sizeof(int) * 2);
+            merged[idx][0] = *(*(nums + i) + j);
+            merged[idx++][1] = i;
+        }
+    }
+
+    
+    qsort(merged, len, sizeof(int *), compare);
+    int* freq = calloc(len, sizeof(int));
+    int left = 0, count = 0;
+    int range_start = 0, range_end = INT_MAX;
+
+    for(int right = 0; right < len; right++) {
+        freq[merged[right][1]]++;
+        if(freq[merged[right][1]] == 1) count++;
+
+        while(count == numsSize) {
+            int cur_range = merged[right][0] - merged[left][0];
+            if(cur_range < range_end - range_start) {
+                range_start = merged[left][0];
+                range_end = merged[right][0];
+            }
+
+            freq[merged[left][1]]--;
+            if(!freq[merged[left][1]]) count--;
+            left++;
+        }
+    }
+    int *res = malloc(sizeof(int) * 2);
+    *returnSize = 2;
+    *res = range_start;
+    *(res + 1) = range_end;
+
+    
+    free(freq);
+    for(int i = 0; i < len; i++) free(*(merged + i));
+    free(merged);
+
+    return res;
+}
