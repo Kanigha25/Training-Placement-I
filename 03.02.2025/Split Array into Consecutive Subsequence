@@ -1,0 +1,72 @@
+bool isPossible(int* nums, int numsSize){  
+    int last = nums[0];
+    
+    int subsequences[numsSize];
+    subsequences[0] = 1;
+    
+    int r_point = 1;
+    int uf_point = 0;
+    int l_point = 0;
+    int i = 1;
+    
+    
+    while (i < numsSize && nums[i] == nums[i-1]){ 
+        subsequences[r_point] = 1;
+        r_point++;
+        i++;
+    }
+
+    while (i < numsSize){
+        
+        if (last+1 == nums[i]){
+            last = nums[i];
+            int same = 1;
+            i++;
+            while (i < numsSize && nums[i] == nums[i-1]){  
+                same++;
+                i++;
+            }
+            
+            if (same < r_point-uf_point){
+                return false;
+            }
+            
+            int copy_l_point = l_point;
+            l_point = uf_point;
+            
+            same -= (r_point-uf_point);
+            
+            for (int j = uf_point ; j < r_point ; j++){
+                subsequences[j]++;
+                if (subsequences[j] == 3){
+                    uf_point++;
+                }
+            }
+            while(same > 0 && l_point > copy_l_point){
+                l_point--;
+                same--;
+            }
+            while (same > 0){
+                subsequences[r_point] = 1;
+                r_point++;
+                same--;
+            }
+        } else {
+            if (uf_point != r_point){
+                return false;
+            } else {
+                last = nums[i];
+                i++;
+                subsequences[r_point] = 1;
+                r_point++;
+                while (i < numsSize && nums[i] == nums[i-1]){  
+                    subsequences[r_point] = 1;
+                    r_point++;
+                    i++;
+                }
+                l_point = uf_point;
+            }
+        }
+    }
+    return uf_point < r_point ? false : true;
+}
