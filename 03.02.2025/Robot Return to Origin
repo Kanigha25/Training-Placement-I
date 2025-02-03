@@ -1,0 +1,5 @@
+bool judgeCircle(char * moves){
+    char x = 0, y = 0, *m = moves - 1;
+    while (*++m && (x += *m == 'R', x -= *m == 'L', y += *m == 'U', y -= *m == 'D', 1));
+    return !x && !y;
+}
