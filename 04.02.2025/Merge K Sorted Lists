@@ -1,0 +1,26 @@
+class Solution(object):
+    def mergeKLists(self, lists):
+        """
+        :type lists: List[ListNode]
+        :rtype: ListNode
+        """
+        if not lists:
+            return 
+        
+        mergedList = []
+        ret = ListNode(0)
+        retP = ret
+
+        for p in lists:
+            while p:
+                mergedList.append(p.val)
+                p = p.next
+
+        mergedList.sort()
+        for item in mergedList:
+            if ret:
+                ret.next = ListNode(item)
+                ret = ret.next
+        return retP.next
+
+
