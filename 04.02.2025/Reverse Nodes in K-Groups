@@ -1,0 +1,31 @@
+class Solution(object):
+    def reverseKGroup(self, head, k):
+        """
+        :type head: Optional[ListNode]
+        :type k: int
+        :rtype: Optional[ListNode]
+        """
+        t=head
+        li=[]
+        n=0
+         
+        while(t!=None):
+            li.append(t.val)
+            n+=1
+            t=t.next
+        i=0
+        
+        while(i+k<=n):
+            a=li[i:i+k]
+            li[i:i+k]=a[::-1]
+            i+=k
+        i=0
+        t=head
+        
+        while(t!=None):
+            t.val=li[i]
+            t=t.next
+            i+=1
+        return head
+        
+        
